@@ -12,6 +12,9 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 
 import java.util.EnumSet;
 
+/**
+ * @author weidian
+ */
 @Configuration
 @EnableStateMachine
 public class StatemachineConfigurer extends EnumStateMachineConfigurerAdapter<TurnstileStates, TurnstileEvents> {
