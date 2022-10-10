@@ -1,5 +1,0 @@
-package com.sample.springstatemachine.appdeploy.models;
-
-public enum States {
-    INITIAL, MODEL_READ, TEMPLATE_FOLDER_IDENTIFIED, APP_DOWNLOADED, APP_COPIED, APP_ARCHIVED, APP_PUSHED, APP_READY, APP_STARTED, APP_LINKED, APP_COMPLETED, FINAL;
-}

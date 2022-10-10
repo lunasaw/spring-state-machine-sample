@@ -1,6 +1,8 @@
 package com.sample.springstatemachine.app;
 
 import com.sample.springstatemachine.application.config.SimpleStateMachineConfiguration;
+import com.sample.springstatemachine.turnstile.events.SimpleEvents;
+import com.sample.springstatemachine.turnstile.states.SimpleStatus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -9,10 +11,19 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageHeaders;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
+import org.springframework.statemachine.StateMachineEventResult;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import reactor.core.CoreSubscriber;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
+
+import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -35,7 +46,25 @@ public class StateMachineIntegrationTest {
     public void whenSimpleStringStateMachineEvents_thenEndState() {
         assertEquals("SI", stateMachine.getState().getId());
 
-        stateMachine.sendEvent("E1");
+        Mono<Message<SimpleEvents>> messageMono = Mono.just(new Message<SimpleEvents>() {
+            @Override
+            public SimpleEvents getPayload() {
+                return SimpleEvents.E1;
+            }
+
+            @Override
+            public MessageHeaders getHeaders() {
+                return null;
+            }
+        });
+        Message<SimpleEvents> message = MessageBuilder.createMessage(SimpleEvents.E1, new MessageHeaders(new HashMap<>()));
+        stateMachine.sendEvent(new Mono<Message<String>>() {
+            @Override
+            public void subscribe(CoreSubscriber<? super Message<String>> actual) {
+
+            }
+        });
+
         assertEquals("S1", stateMachine.getState().getId());
 
         stateMachine.sendEvent("E2");
